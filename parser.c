@@ -24,11 +24,28 @@ char *errormsg[] = {
 	"Error : arithmetic equations must contain operands, parentheses, numbers, or symbols\n"
 };
 
+void block(int lev, int tx, symbol* table, FILE* ifp, instruction* code);
+void constdeclaration(int lev, int *ptx, int *pdx, FILE* ifp, symbol* table);
+void vardeclaration(int lev, int *ptx, int *pdx, FILE* ifp, symbol* table);
+void statement(int lev, int *ptx, FILE* ifp, instruction* code, symbol* table);
+void condition(int lev, int *ptx, FILE* ifp, instruction* code, symbol* table);
+void expression(int lev, int *ptx, FILE* ifp, instruction* code, symbol* table);
+void term(int lev, int *ptx, FILE* ifp, instruction* code, symbol* table);
+void factor(int lev, int *ptx, symbol* table, FILE* ifp, instruction* code);
+
+int codeidx, token, num, kind, lexemeListIndex=0, errorCount=0, difference, previousDifference=0;
+char id[12];
+
 void emit(int opcode, char op[], int l, int m);
 
 instruction *parse(token_struct *tokenList, int print)
 {
 	code = malloc(500 * sizeof(instruction));
+
+	symbol table[MAX_SYMBOL_TABLE_SIZE] = {0};
+
+	
+
 	printf("code has been parsed\n");
 	return code;
 }
