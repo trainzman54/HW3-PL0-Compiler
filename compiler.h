@@ -1,3 +1,7 @@
+
+#define MAX_SYMBOL_TABLE_SIZE 1000
+#define CODE_SIZE 1000
+
 typedef enum
 {
 	modsym = 1, identsym, numbersym, plussym, minussym, 

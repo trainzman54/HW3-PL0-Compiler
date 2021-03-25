@@ -9,6 +9,13 @@ const char *reserved_words[] = {"const", "var", "procedure", "call", "if", "then
 
 const char special_symbols[] = {'+', '-', '*', '/', '(', ')', '=', ',', '.', '<', '>', ';', ':', '%'};
 
+char get_next_char(char *inputfile, int *z)
+{
+	char c = inputfile[*z];
+	*z = *z + 1;
+	return c;
+}
+
 token_struct* lex_analyze(char *inputfile, int print)
 {
 	token_struct *lex_list = malloc(500 * sizeof(token_struct));
@@ -27,13 +34,14 @@ token_struct* lex_analyze(char *inputfile, int print)
     
     while (z < input_size)
     {
-		c = inputfile[z++];
+		c = get_next_char(inputfile, &z);
+		printf("%c\n", z);
 		if (i >= input_size)
 			break;
 
         if(isspace(c))
         {
-            c = inputfile[z++];
+            c = get_next_char(inputfile, &z);
 			if (i >= input_size)
 				break;
             read_next = 0;
@@ -51,13 +59,13 @@ token_struct* lex_analyze(char *inputfile, int print)
             index++;
             read_next = 1;
 
-            while(isalpha(c = inputfile[z++]) || isdigit(c))
+            while(isalpha(c = get_next_char(inputfile, &z)) || isdigit(c))
             {
                 if(index > 10)
                 {
                     printf("Error: Identifier names cannot exceed 11 characters\n");
 
-                    while (isalpha(c = inputfile[z++]) || isdigit(c)){                    }
+                    while (isalpha(c = get_next_char(inputfile, &z)) || isdigit(c)){                    }
                     err = 1;
 
                     break;
@@ -192,13 +200,13 @@ token_struct* lex_analyze(char *inputfile, int print)
 
             read_next = 1;
 
-            while(isdigit(c=inputfile[z++]))
+            while(isdigit(c=get_next_char(inputfile, &z)))
             {
                 if(num_digits > 4)
                 {
                     printf("Error: Numbers cannot exceed 5 digits\n");
 
-                    while(isdigit(c=inputfile[z++])){}
+                    while(isdigit(c=get_next_char(inputfile, &z))){}
 
                     err = 1;
                     break;
@@ -214,7 +222,7 @@ token_struct* lex_analyze(char *inputfile, int print)
                 {
                     printf("Error: Identifiers cannot begin with a digit\n");
                 }
-                while(isalpha(c = inputfile[z++]) || isdigit(c)){}
+                while(isalpha(c = get_next_char(inputfile, &z)) || isdigit(c)){}
                 continue;
             }
 
@@ -267,7 +275,7 @@ token_struct* lex_analyze(char *inputfile, int print)
                     break;
                 // Comments or /
                 case 3:
-                    c = inputfile[z++];
+                    c = get_next_char(inputfile, &z);
 					if (i >= input_size)
 						break;
                     read_next = 1;
@@ -275,14 +283,14 @@ token_struct* lex_analyze(char *inputfile, int print)
                     {
                         comment = 1;
                         read_next = 0;
-                        c = inputfile[z++];
+                        c = get_next_char(inputfile, &z);
 						if (i >= input_size)
 							break;
                         while(comment == 1)
                         {
                             if(c == '*')
                             {
-                                c = inputfile[z++];
+                                c = get_next_char(inputfile, &z);
 								if (i >= input_size)
 									break;
                                 if(c == '/')
@@ -292,7 +300,7 @@ token_struct* lex_analyze(char *inputfile, int print)
                             }
                             else
                             {
-                                c = inputfile[z++];
+                                c = get_next_char(inputfile, &z);
 								if (i >= input_size)
 									break;
                             }
@@ -343,7 +351,7 @@ token_struct* lex_analyze(char *inputfile, int print)
                     break;
                 // <
                 case 9:
-                    c = inputfile[z++];
+                    c = get_next_char(inputfile, &z);
 					if (i >= input_size)
 						break;
                     read_next = 1;
@@ -373,7 +381,7 @@ token_struct* lex_analyze(char *inputfile, int print)
                     break;
                 // >
                 case 10:
-                    c = inputfile[z++];
+                    c = get_next_char(inputfile, &z);
 					if (i >= input_size)
 						break;
                     read_next = 1;
@@ -401,7 +409,7 @@ token_struct* lex_analyze(char *inputfile, int print)
                     break;
                 // :
                 case 12:
-                    c = inputfile[z++];
+                    c = get_next_char(inputfile, &z);
 					if (i >= input_size)
 						break;
                     if(c == '=')
@@ -433,7 +441,7 @@ token_struct* lex_analyze(char *inputfile, int print)
 
         if(read_next == 0)
         {
-            c = inputfile[z++];
+            c = get_next_char(inputfile, &z);
 			if (i >= input_size)
 				break;
         }
@@ -456,6 +464,5 @@ token_struct* lex_analyze(char *inputfile, int print)
 		}
 		printf("\n");
 	}
-	printf("lex is analyzed\n");
 	return lex_list;
 }

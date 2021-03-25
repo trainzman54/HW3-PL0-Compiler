@@ -47,13 +47,14 @@ int main(int argc, char **argv)
 	i = 0;
 	while (1)
 	{
-		inputfile[i++] = c;
+		inputfile[i] = c;
+		i++;
 		c = fgetc(ifp);
 		if (c == EOF)
 			break;
 	}
 	inputfile[i] = '\0';
-	input_size = i;
+	input_size = i + 1;
 	
 	token_struct *list = lex_analyze(inputfile, lflag);
 	instruction *code = parse(list, aflag);
